@@ -1,9 +1,9 @@
 version: 2.1
 
 jobs:
-  build:
+  release:
     docker:
-      - image: cimg/python:3.10.1
+      - image: ubuntu:latest
 
     working_directory: ~/repo
 
@@ -11,25 +11,31 @@ jobs:
       - checkout
 
       - run:
-          name: Install dependencies
-          command: |
-            pip install --upgrade pip
-            pip install -r requirements.txt
+          name: Unshallow
+          command: git fetch --prune --unshallow
+
+      - run:
+          name: Get the version to publish
+          command: echo "VERSION=$(echo $CIRCLE_TAG | sed 's/v//')" >> $BASH_ENV
+
+      - setup_remote_docker
+
+      - run:
+          name: Docker Login in GHCR
+          command: echo "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" | docker login ghcr.io -u "NicolasMunoz13" --password-stdin
 
       - run:
           name: Build and push Docker image
-          command: |
-            echo "Building and pushing Docker image..."
-            docker build -t ghcr.io/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
-            docker login ghcr.io -u NicolasMunoz13 -p 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
-            docker push ghcr.io/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
+          command: make publish
+          environment:
+            VERSION: $VERSION
 
 workflows:
 
   build-and-deploy:
     jobs:
-      - build:
+      - release:
           filters:
-            branches:
+            tags:
               only:
-                - main
+                - /^v.*/
