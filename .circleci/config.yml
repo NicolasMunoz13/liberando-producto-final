@@ -20,6 +20,8 @@ jobs:
           name: Build and push Docker image
           command: |
             echo "Building and pushing Docker image..."
+            systemctl start docker
+            systemctl enable docker
             docker build -t ghcr.io/nicolasmunoz13/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
             docker login ghcr.io -u nicolasmunoz13 -p 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
             docker push ghcr.io/nicolasmunoz13/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
