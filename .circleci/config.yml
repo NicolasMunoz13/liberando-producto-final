@@ -18,6 +18,14 @@ jobs:
           command: |
             pip install --upgrade pip
             pip install -r requirements.txt
+      
+      - run:
+          name: Run Tests
+          command: |
+            . venv/bin/activate
+            pytest
+            pytest --cov
+            pytest --cov --cov-report=html
 
       - run:
           name: Build and push Docker image
