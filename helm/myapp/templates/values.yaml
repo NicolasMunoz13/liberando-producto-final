@@ -1,0 +1,6 @@
+myapp:
+  fullnameOverride: ""
+  name: "myapp"
+  image:
+    repository: "simple-server:0.0.1"
+    tag: "tag"
