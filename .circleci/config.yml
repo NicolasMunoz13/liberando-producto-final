@@ -31,7 +31,7 @@ jobs:
           command: |
             echo "Building and pushing Docker image..."
             docker build -t ghcr.io/nicolasmunoz13/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
-            echo 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 | docker login ghcr.io -u nicolasmunoz13 --password-stdin
+            echo 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 | docker login ghcr.io -u nicolasmunoz13 --password-stdin
             docker push ghcr.io/nicolasmunoz13/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}
 
 workflows:
